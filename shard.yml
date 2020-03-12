@@ -1,0 +1,13 @@
+name: video-manager
+version: 0.1.0
+
+authors:
+  - Sam Johnson <sam@durosoft.com>
+
+targets:
+  video-manager:
+    main: src/video-manager.cr
+
+crystal: 0.33.0
+
+license: MIT
