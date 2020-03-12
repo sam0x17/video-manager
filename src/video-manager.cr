@@ -18,7 +18,7 @@ end
 
 settings_exists = File.exists?(SETTINGS_PATH)
 settings = settings_exists ? Settings.from_json(File.read(SETTINGS_PATH)) : Settings.new
-File.write(SETTINGS_PATH, settings.to_json) unless settings_exists
+File.write(SETTINGS_PATH, settings.to_pretty_json) unless settings_exists
 
 if settings.watched_directories.empty?
   puts "watched_directories is empty, nothing to do!"
