@@ -2,18 +2,11 @@ require "json"
 require "openssl"
 
 SETTINGS_PATH = "#{ENV["HOME"]}/.video-manager-settings.json"
-BUFFER_SIZE = 64000
 
 def calculate_checksum(path)
-  buffer = Bytes.new(BUFFER_SIZE)
   hash = OpenSSL::Digest.new("sha256")
-  File.open(path) do |io|
-    until io.pos >= io.size
-      amount = io.read(buffer)
-      buffer = buffer[0..(amount - 1)] if amount < BUFFER_SIZE
-      hash.update(buffer)
-    end
-  end
+  hash.update(File.basename(path))
+  hash.update(File.size(path).to_s)
   hash.hexdigest
 end
 
@@ -57,7 +50,6 @@ settings.watched_directories.each do |dir_path|
     puts "[#{already_optimized ? "optimized" : " queuing "}]  #{checksum}  #{path}"
     optimize_queue << path unless already_optimized
     num_optimized += 1 if already_optimized
-    break if optimize_queue.size > 5
   end
 end
 puts ""
@@ -73,4 +65,3 @@ optimize_queue.each do |item|
   current += 1
   current = 0 if current == groups.size
 end
-pp groups
