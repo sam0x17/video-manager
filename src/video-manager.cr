@@ -23,10 +23,10 @@ struct Settings
   end
 end
 
+# load settings
 settings_exists = File.exists?(SETTINGS_PATH)
 settings = settings_exists ? Settings.from_json(File.read(SETTINGS_PATH)) : Settings.new
 File.write(SETTINGS_PATH, settings.to_pretty_json) unless settings_exists
-
 if settings.watched_directories.empty?
   puts "watched_directories is empty, nothing to do!"
   puts "please edit #{SETTINGS_PATH} with some valid paths to watch for video files to optimize"
@@ -34,6 +34,7 @@ if settings.watched_directories.empty?
   exit 1
 end
 
+# perform initial scan
 puts ""
 puts "starting scan..."
 puts ""
@@ -57,6 +58,8 @@ puts "detected #{optimize_queue.size} files that need optimization and #{num_opt
 puts ""
 puts "entering encoding phase using #{settings.num_encoder_threads} fibers..."
 puts ""
+
+# create groups
 groups = Array(Array(String)).new
 settings.num_encoder_threads.times { groups << Array(String).new }
 current = 0
