@@ -1,6 +1,21 @@
 require "json"
+require "openssl"
 
 SETTINGS_PATH = "#{ENV["HOME"]}/.video-manager-settings.json"
+BUFFER_SIZE = 64000
+
+def calculate_checksum(path)
+  buffer = Bytes.new(BUFFER_SIZE)
+  hash = OpenSSL::Digest.new("sha256")
+  File.open(path) do |io|
+    until io.pos >= io.size
+      amount = io.read(buffer)
+      buffer = buffer[0..(amount - 1)] if amount < BUFFER_SIZE
+      hash.update(buffer)
+    end
+  end
+  hash.hexdigest
+end
 
 struct Settings
   include JSON::Serializable
@@ -25,4 +40,13 @@ if settings.watched_directories.empty?
   puts "please edit #{SETTINGS_PATH} with some valid paths to watch for video files to optimize"
   puts "exiting."
   exit 1
+end
+
+puts "starting scan..."
+settings.watched_directories.each do |dir_path|
+  Dir.each_child(dir_path) do |filename|
+    path = Path[dir_path].join(filename)
+    checksum = calculate_checksum(path)
+    puts "#{filename}\t#{checksum}"
+  end
 end
