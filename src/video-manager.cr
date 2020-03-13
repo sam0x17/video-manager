@@ -45,15 +45,23 @@ puts ""
 puts "starting scan..."
 puts ""
 puts "STATUS       SHA256                                                            PATH"
+optimize_queue = Array(String).new
+num_optimized = 0
 settings.watched_directories.each do |dir_path|
   Dir.each_child(dir_path) do |filename|
-    path = Path[dir_path].join(filename)
+    path = Path[dir_path].join(filename).to_s
     extension = File.extname(filename.downcase)[1..]
     next unless settings.supported_video_extensions.includes?(extension)
     checksum = calculate_checksum(path)
     already_optimized = settings.optimized_hashes.includes?(checksum)
     puts "[#{already_optimized ? "optimized" : " queuing "}]  #{checksum}  #{path}"
+    optimize_queue << path unless already_optimized
+    num_optimized += 1 if already_optimized
+    break if optimize_queue.size > 5
   end
 end
 puts ""
-puts "scan complete."
+puts "detected #{num_optimized} optimized files and #{optimize_queue.size} files that need optimization."
+puts ""
+puts "entering encoding phase using #{settings.num_encoder_threads} fibers..."
+puts ""
