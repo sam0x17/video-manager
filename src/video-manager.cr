@@ -61,7 +61,16 @@ settings.watched_directories.each do |dir_path|
   end
 end
 puts ""
-puts "detected #{num_optimized} optimized files and #{optimize_queue.size} files that need optimization."
+puts "detected #{optimize_queue.size} files that need optimization and #{num_optimized} that have already been optimized."
 puts ""
 puts "entering encoding phase using #{settings.num_encoder_threads} fibers..."
 puts ""
+groups = Array(Array(String)).new
+settings.num_encoder_threads.times { groups << Array(String).new }
+current = 0
+optimize_queue.each do |item|
+  groups[current] << item
+  current += 1
+  current = 0 if current == groups.size
+end
+pp groups
