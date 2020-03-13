@@ -111,8 +111,11 @@ end
 
 num_to_optimize = optimize_queue.size
 optimize_queue.clear
+i = 0
 num_to_optimize.times do
+  i += 1
   hash = output_channel.receive
   settings.optimized_hashes << hash
   File.write(SETTINGS_PATH, settings.to_pretty_json)
+  puts "optimized #{i} / #{num_to_optimize} files (#{hash})"
 end
