@@ -116,6 +116,13 @@ num_to_optimize.times do
   i += 1
   hash = output_channel.receive
   settings.optimized_hashes << hash
-  File.write(SETTINGS_PATH, settings.to_pretty_json)
+  begin
+    tmpfile = File.tempfile("video_manager_settings", ".json")
+    File.write(tmpfile.path, settings.to_pretty_json)
+    FileUtils.rm(SETTINGS_PATH)
+    FileUtils.mv(tmpfile.path, SETTINGS_PATH)
+  ensure
+    tmpfile.delete if tmpfile && File.exists?(tmpfile.path)
+  end
   puts "optimized #{i} / #{num_to_optimize} files (#{hash})"
 end
