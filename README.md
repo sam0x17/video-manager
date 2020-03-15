@@ -16,4 +16,21 @@ their hashes will be invalidated.
 
 On a very good CPU (i.e. a 9900k), 8 threads seems to be the sweet spot.
 
-The config file is located at `~/.video-manager-settings.json`
+The config file is located at `~/.video-manager-settings.json`. The first
+time the program is run a default config will be created and you can further
+configure things from there.
+
+Only linux and macos are supported. Once windows support is added to crystal
+I may update this to work on windows if running ffmpeg on windows is even
+feasible, which I don't know.
+
+## Installation
+
+1. download and install crystal via https://crystal-lang.org/install/
+2. clone the repo `git clone git@github.com:sam0x17/video-manager.git`
+3. `cd` into the repo (`cd video-manager`)
+4. run `shards install`
+5. run `shards build --release`
+
+The binary is now located in the `bin` folder. You can run it directly,
+or install it somewhere more permanent on your system like `/usr/bin`.
