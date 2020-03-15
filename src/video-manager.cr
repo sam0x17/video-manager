@@ -17,7 +17,7 @@ struct Settings
   property supported_video_extensions : Set(String) = Set.new(["mkv", "mp4", "avi", "wmv", "mov", "mpg", "mpeg", "flv", "swf"])
   property recurse_subdirectories = true
   property num_encoder_threads = 1
-  property ffmpeg_options = "ffmpeg -loglevel warning -hide_banner -i \"$SRC_PATH\" -c:v libx264 -c:a aac -tune zerolatency -q:a 0 -q:v 0 \"$DEST_PATH\""
+  property ffmpeg_options = "ffmpeg -loglevel warning -hide_banner -i \"$SRC_PATH\" -c:v libx264 -c:a aac -tune zerolatency -q:a 0 -q:v 0 -movflags faststart -pix_fmt yuv420p \"$DEST_PATH\""
   property optimized_hashes : Set(String) = Set(String).new
   property watched_directories : Set(String) = Set(String).new
 
