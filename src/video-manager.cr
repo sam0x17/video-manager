@@ -44,7 +44,8 @@ puts "STATUS       SHA256                                                       
 optimize_queue = Array(String).new
 num_optimized = 0
 settings.watched_directories.each do |dir_path|
-  Dir.each_child(dir_path) do |filename|
+  children = Dir.children(dir_path).sort_by { |child| File.info(Path[dir_path].join(child)).modification_time }.reverse
+  children.each do |filename|
     path = Path[dir_path].join(filename).to_s
     extension = File.extname(filename.downcase)[1..]
     next unless settings.supported_video_extensions.includes?(extension)
