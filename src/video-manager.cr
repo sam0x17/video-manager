@@ -5,10 +5,11 @@ require "file_utils"
 SETTINGS_PATH = "#{ENV["HOME"]}/.video-manager-settings.json"
 OUTPUT_FORMAT = "mkv"
 
-def calculate_checksum(path)
+def calculate_checksum(path, settings)
   hash = OpenSSL::Digest.new("sha256")
   hash.update(File.basename(path))
   hash.update(File.size(path).to_s)
+  hash.update(settings.ffmpeg_options)
   hash.hexdigest
 end
 
@@ -49,7 +50,7 @@ settings.watched_directories.each do |dir_path|
     path = Path[dir_path].join(filename).to_s
     extension = File.extname(filename.downcase)[1..]
     next unless settings.supported_video_extensions.includes?(extension)
-    checksum = calculate_checksum(path)
+    checksum = calculate_checksum(path, settings)
     already_optimized = settings.optimized_hashes.includes?(checksum)
     puts "[#{already_optimized ? "optimized" : " queuing "}]  #{checksum}  #{path}"
     optimize_queue << path unless already_optimized
@@ -99,7 +100,7 @@ groups.each do |group|
         dest_path = path[0..(path.size - 4)] + OUTPUT_FORMAT
         raise "FILE IS EMPTY!" unless File.size(tmp_dest_path) > 1000
         FileUtils.mv(tmp_dest_path, dest_path)
-        hash = calculate_checksum(dest_path)
+        hash = calculate_checksum(dest_path, settings)
         output_channel.send(hash)
         puts "finished optimizing #{dest_path}!"
       ensure
