@@ -93,7 +93,7 @@ groups.each do |group|
         `#{ffmpeg_options}`
         Process.run("ffmpeg", ffmpeg_options[6..].split(" "))
         puts "finished re-encoding #{inputfile.path}"
-        tmp_dest_path = path.gsub(File.basename(path), "") + File.basename(outputfile.path)
+        tmp_dest_path = path.gsub(File.basename(path), "") + File.basename(outputfile.path).gsub(".mkv", "")
         puts "atomically copying #{outputfile.path} => #{tmp_dest_path}"
         FileUtils.cp(outputfile.path, tmp_dest_path)
         FileUtils.rm(path)
