@@ -15,7 +15,7 @@ end
 
 struct Settings
   include JSON::Serializable
-  property supported_video_extensions : Set(String) = Set.new(["mkv", "mp4", "avi", "wmv", "mov", "mpg", "mpeg", "flv", "swf"])
+  property supported_video_extensions : Set(String) = Set.new(["mkv", "mp4", "avi", "wmv", "mov", "mpg", "mpeg", "flv", "swf", "m4v"])
   property recurse_subdirectories = true
   property num_encoder_threads = 1
   property ffmpeg_options = "ffmpeg -loglevel warning -hide_banner -i \"$SRC_PATH\" -c:v libx264 -c:a aac -tune zerolatency -q:a 0 -q:v 0 -movflags faststart -pix_fmt yuv420p \"$DEST_PATH\""
