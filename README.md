@@ -3,7 +3,7 @@ This simple crystal program will loop over the list of directories you tell it
 to via the config file. For each video file in the directory, it will optimize
 the file according to the ffmpeg encoding settings listed in your config file.
 Each file is copied to /tmp before conversion begins, and all file changes
-are done atomically, meaning the program can be interrupted at any point and
+are done automically, meaning the program can be interrupted at any point and
 you won't corrupt or lose any data. You can also configure the number of
 parallel conversions that will run at once. The default ffmpeg settings
 are designed to allow for fast seeking on a Plex server.
